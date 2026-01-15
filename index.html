@@ -5,12 +5,123 @@
     <title>my-habit-app</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; margin: 20px; }
-        .habit-item { margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; list-style: none; }
-        .name-btn { font-size: 1.1em; padding: 5px 15px; cursor: pointer; background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; }
-        .delete-btn { margin-left: 10px; color: red; cursor: pointer; }
-        .log-text { font-size: 0.8em; color: #666; margin-top: 5px; }
-        #chart-container { width: 100%; max-width: 600px; margin-top: 30px; }
+    /* 全体の背景と文字 */
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        color: #1a73e8;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* 入力エリア */
+    .input-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    button#add-btn {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* 習慣リスト */
+    #habitList {
+        width: 100%;
+        max-width: 400px;
+        padding: 0;
+    }
+
+    .habit-item {
+        background: white;
+        margin-bottom: 12px;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* 記録ボタン（大きく押しやすく） */
+    .name-btn {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        border: 2px solid #1a73e8;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .name-btn:active {
+        background-color: #d2e3fc;
+        transform: scale(0.98);
+    }
+
+    /* 削除ボタンと回数表示の行 */
+    .item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #eee;
+        padding-top: 8px;
+    }
+
+    .log-text {
+        font-size: 14px;
+        color: #5f6368;
+        font-weight: bold;
+    }
+
+    .delete-btn {
+        color: #d93025;
+        font-size: 13px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    /* グラフの容器 */
+    #chart-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+        margin-top: 20px;
+    }
     </style>
 </head>
 <body>
