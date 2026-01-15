@@ -2,254 +2,147 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>my-habit-app</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-    /* 全体の背景と文字 */
-    body {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        background-color: #f0f2f5;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .container { width: 100%; max-width: 400px; }
+        h1 { color: #1a73e8; text-align: center; }
 
-    h1 {
-        color: #1a73e8;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
+        /* 入力エリア */
+        .input-group {
+            display: flex; gap: 8px; margin-bottom: 20px;
+            background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        button#add-btn { background: #1a73e8; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; }
 
-    /* 入力エリア */
-    .input-container {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
+        /* 習慣カード */
+        .habit-card {
+            background: white; margin-bottom: 12px; padding: 15px;
+            border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            list-style: none;
+        }
+        .name-btn {
+            width: 100%; padding: 12px; margin-bottom: 10px;
+            background: #e8f0fe; color: #1a73e8; border: 2px solid #1a73e8;
+            border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
+        .name-btn:active { background: #d2e3fc; transform: scale(0.98); }
 
-    input[type="text"] {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        outline: none;
-    }
+        /* 履歴（日時）の表示エリア */
+        .log-container {
+            font-size: 12px; color: #666; max-height: 60px; overflow-y: auto;
+            background: #f9f9f9; padding: 5px; border-radius: 4px; margin-bottom: 10px;
+        }
+        .log-item { border-bottom: 1px solid #eee; padding: 2px 0; }
 
-    button#add-btn {
-        background-color: #1a73e8;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-    }
+        .footer { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .delete-btn { color: #d93025; cursor: pointer; text-decoration: underline; }
 
-    /* 習慣リスト */
-    #habitList {
-        width: 100%;
-        max-width: 400px;
-        padding: 0;
-    }
-
-    .habit-item {
-        background: white;
-        margin-bottom: 12px;
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    /* 記録ボタン（大きく押しやすく） */
-    .name-btn {
-        background-color: #e8f0fe;
-        color: #1a73e8;
-        border: 2px solid #1a73e8;
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .name-btn:active {
-        background-color: #d2e3fc;
-        transform: scale(0.98);
-    }
-
-    /* 削除ボタンと回数表示の行 */
-    .item-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #eee;
-        padding-top: 8px;
-    }
-
-    .log-text {
-        font-size: 14px;
-        color: #5f6368;
-        font-weight: bold;
-    }
-
-    .delete-btn {
-        color: #d93025;
-        font-size: 13px;
-        cursor: pointer;
-        text-decoration: underline;
-    }
-
-    /* グラフの容器 */
-    #chart-container {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
-        margin-top: 20px;
-    }
+        /* グラフ */
+        #chart-box {
+            background: white; padding: 15px; border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
+<div class="container">
     <h1>習慣トラッカー</h1>
     
-    <input type="text" id="habitInput" placeholder="新しい習慣を入力">
-    <button onclick="addHabit()">追加</button>
-
-    <ul id="habitList" style="padding: 0;"></ul>
-
-    <div id="chart-container">
-        <canvas id="habitChart"></canvas>
+    <div class="input-group">
+        <input type="text" id="habitInput" placeholder="新しい習慣を追加">
+        <button id="add-btn" onclick="addHabit()">追加</button>
     </div>
 
-    <script>
-        // データの読み込み
-        let habits = JSON.parse(localStorage.getItem('myHabits')) || [];
-        let myChart = null;
+    <ul id="habitList" style="padding:0;"></ul>
 
-        window.onload = function() {
-            renderHabits();
-        };
+    <div id="chart-box">
+        <canvas id="habitChart"></canvas>
+    </div>
+</div>
 
-        // 習慣の追加
-        function addHabit() {
-            const input = document.getElementById('habitInput');
-            const text = input.value;
-            if (text === "") return;
+<script>
+    let habits = JSON.parse(localStorage.getItem('myHabits')) || [];
+    let myChart = null;
 
-            const newHabit = {
-                name: text,
-                logs: [] // ここに日時が入っていく
-            };
+    window.onload = renderHabits;
 
-            habits.push(newHabit);
-            saveData();
-            renderHabits();
-            input.value = "";
+    function addHabit() {
+        const input = document.getElementById('habitInput');
+        if (input.value === "") return;
+        habits.push({ name: input.value, logs: [] });
+        saveAndRender();
+        input.value = "";
+    }
+
+    function addLog(index) {
+        const now = new Date();
+        // 「月/日 時:分」の形式を作る
+        const timeString = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+        
+        habits[index].logs.push(timeString);
+        saveAndRender();
+    }
+
+    function deleteHabit(index) {
+        if(confirm("削除しますか？")) {
+            habits.splice(index, 1);
+            saveAndRender();
         }
+    }
 
-        // 保存
-        function saveData() {
-            localStorage.setItem('myHabits', JSON.stringify(habits));
-        }
+    function saveAndRender() {
+        localStorage.setItem('myHabits', JSON.stringify(habits));
+        renderHabits();
+    }
 
-        // 削除
-        function deleteHabit(index) {
-            if(confirm("本当に削除しますか？")) {
-                habits.splice(index, 1);
-                saveData();
-                renderHabits();
-            }
-        }
+    function renderHabits() {
+        const list = document.getElementById('habitList');
+        list.innerHTML = '';
 
-        // 記録（ログ）の追加
-        function addLog(index) {
-            const now = new Date();
-            const timestamp = now.toLocaleDateString(); // 日付だけを保存（トレンド用）
-            
-            habits[index].logs.push(timestamp);
-            saveData();
-            renderHabits();
-        }
+        habits.forEach((habit, index) => {
+            const li = document.createElement('li');
+            li.className = 'habit-card';
 
-        // 画面の更新（リストとグラフ）
-        function renderHabits() {
-            const habitList = document.getElementById('habitList');
-            habitList.innerHTML = '';
+            // 履歴のリストを作成
+            const logHtml = habit.logs.slice().reverse().map(t => `<div class="log-item">${t}</div>`).join('');
 
-            habits.forEach((habit, index) => {
-                const li = document.createElement('li');
-                li.className = 'habit-item';
+            li.innerHTML = `
+                <button class="name-btn" onclick="addLog(${index})">${habit.name} (+1)</button>
+                <div class="log-container">
+                    ${logHtml || '<div style="color:#ccc">記録なし</div>'}
+                </div>
+                <div class="footer">
+                    <span>合計: <strong>${habit.logs.length}</strong> 回</span>
+                    <span class="delete-btn" onclick="deleteHabit(${index})">削除</span>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+        updateChart();
+    }
 
-                // 名前ボタン
-                const nameBtn = document.createElement('button');
-                nameBtn.className = 'name-btn';
-                nameBtn.textContent = habit.name + " (＋1)";
-                nameBtn.onclick = () => addLog(index);
-
-                // 削除ボタン
-                const deleteBtn = document.createElement('span');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.textContent = "[削除]";
-                deleteBtn.onclick = () => deleteHabit(index);
-
-                // 履歴テキスト
-                const logDiv = document.createElement('div');
-                logDiv.className = 'log-text';
-                logDiv.textContent = "合計回数: " + habit.logs.length + "回";
-
-                li.appendChild(nameBtn);
-                li.appendChild(deleteBtn);
-                li.appendChild(logDiv);
-                habitList.appendChild(li);
-            });
-
-            updateChart();
-        }
-
-        // グラフの更新
-        function updateChart() {
-            const ctx = document.getElementById('habitChart').getContext('2d');
-            
-            const labels = habits.map(h => h.name);
-            const data = habits.map(h => h.logs.length);
-
-            if (myChart) {
-                myChart.destroy();
-            }
-
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '習慣実行回数',
-                        data: data,
-                        backgroundColor: '#4caf50',
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
-                    }
-                }
-            });
-        }
-    </script>
+    function updateChart() {
+        const ctx = document.getElementById('habitChart').getContext('2d');
+        if (myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: habits.map(h => h.name),
+                datasets: [{ label: '回数', data: habits.map(h => h.logs.length), backgroundColor: '#1a73e8' }]
+            },
+            options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+        });
+    }
+</script>
 </body>
 </html>
