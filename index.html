@@ -14,42 +14,68 @@
             margin: 0; padding: 20px; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center; color: #333;
         }
-        .container { width: 100%; max-width: 420px; }
+        .container { width: 100%; max-width: 480px; }
         h1 {
             font-family: 'Montserrat', sans-serif; color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 32px;
-            text-align: center; margin: 20px 0; text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3); font-size: 28px;
+            text-align: center; margin: 10px 0 20px 0; text-transform: uppercase;
         }
+
+        /* 入力エリア */
         .input-group {
-            display: flex; gap: 10px; margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.95); padding: 15px;
-            border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex; gap: 8px; margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95); padding: 12px;
+            border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
-        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-        button#add-btn { background: #263238; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        button#add-btn { background: #263238; color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* 習慣リスト：2列のグリッド表示 */
+        #habitList {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2列に並べる */
+            gap: 12px;
+            padding: 0; margin: 0;
+            list-style: none;
+        }
 
         .habit-card {
-            background: rgba(255, 255, 255, 0.95); margin-bottom: 15px; padding: 20px;
-            border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); list-style: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .name-btn {
-            width: 100%; padding: 15px; margin-bottom: 12px;
-            background: #eceff1; color: #455a64; border: 2px solid #455a64;
-            border-radius: 10px; font-weight: 700; font-size: 18px; cursor: pointer;
-        }
-        .log-container {
-            font-size: 11px; color: #546e7a; max-height: 80px; overflow-y: auto;
-            background: #f1f3f4; padding: 8px; border-radius: 8px; margin-bottom: 12px;
-        }
-        .footer { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: bold; }
-        .delete-btn { color: #b71c1c; cursor: pointer; font-size: 12px; font-weight: normal; }
 
-        #chart-box {
-            background: rgba(255, 255, 255, 0.95); padding: 20px;
-            border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            margin-top: 20px; margin-bottom: 40px;
+        /* ボタンを小さめに調整 */
+        .name-btn {
+            width: 100%; padding: 10px 5px; margin-bottom: 8px;
+            background: #eceff1; color: #455a64; border: 1.5px solid #455a64;
+            border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .chart-title { font-size: 14px; font-weight: bold; text-align: center; margin-bottom: 10px; color: #455a64; }
+
+        .log-container {
+            font-size: 10px; color: #546e7a; max-height: 50px; overflow-y: auto;
+            background: #f1f3f4; padding: 5px; border-radius: 6px; margin-bottom: 8px;
+        }
+
+        .footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; }
+        .delete-btn { color: #b71c1c; cursor: pointer; font-weight: normal; font-size: 10px; }
+
+        /* グラフを大きく表示 */
+        #chart-box {
+            background: rgba(255, 255, 255, 0.95); padding: 15px;
+            border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-top: 25px; margin-bottom: 40px;
+            width: 100%; box-sizing: border-box;
+        }
+        .chart-title { font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 10px; color: #455a64; }
+        
+        /* グラフの高さを確保 */
+        canvas { min-height: 250px; }
     </style>
 </head>
 <body>
@@ -58,14 +84,14 @@
     <h1>[Habit tracker]</h1>
     
     <div class="input-group">
-        <input type="text" id="habitInput" placeholder="新しい習慣を入力...">
+        <input type="text" id="habitInput" placeholder="新しい習慣...">
         <button id="add-btn" onclick="addHabit()">追加</button>
     </div>
 
-    <ul id="habitList" style="padding:0; margin:0;"></ul>
+    <ul id="habitList"></ul>
 
     <div id="chart-box">
-        <div class="chart-title">日別の達成状況 (過去7日間)</div>
+        <div class="chart-title">7日間の推移</div>
         <canvas id="habitChart"></canvas>
     </div>
 </div>
@@ -73,7 +99,12 @@
 <script>
     let habits = JSON.parse(localStorage.getItem('myHabits')) || [];
     let myChart = null;
-    const colorPalette = ['#1a73e8', '#d93025', '#188038', '#f9ab00', '#af5cf7', '#00acc1'];
+    
+    // 10色の鮮やかなカラーパレット
+    const colorPalette = [
+        '#1a73e8', '#d93025', '#188038', '#f9ab00', '#af5cf7', 
+        '#00acc1', '#ff4081', '#795548', '#607d8b', '#ff5722'
+    ];
 
     window.onload = renderHabits;
 
@@ -87,10 +118,9 @@
 
     function addLog(index) {
         const now = new Date();
-        // グラフ用に「日付」と「時刻」を分けて保存
         const logData = {
-            date: `${now.getMonth()+1}/${now.getDate()}`, // グラフの横軸用
-            full: `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}` // 表示用
+            date: `${now.getMonth()+1}/${now.getDate()}`,
+            full: `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`
         };
         habits[index].logs.push(logData);
         saveAndRender();
@@ -115,14 +145,14 @@
             const li = document.createElement('li');
             li.className = 'habit-card';
             const logHtml = habit.logs.slice().reverse().map(log => 
-                `<div style="padding:3px 0; border-bottom:1px solid #eee;">✔ ${log.full || log}</div>`
+                `<div style="border-bottom:1px solid #eee;">✔ ${log.full || log}</div>`
             ).join('');
 
             li.innerHTML = `
-                <button class="name-btn" onclick="addLog(${index})">${habit.name}</button>
+                <button class="name-btn" onclick="addLog(${index})" title="${habit.name}">${habit.name}</button>
                 <div class="log-container">${logHtml || '記録なし'}</div>
                 <div class="footer">
-                    <span>Total: ${habit.logs.length}回</span>
+                    <span>${habit.logs.length}回</span>
                     <span class="delete-btn" onclick="deleteHabit(${index})">削除</span>
                 </div>
             `;
@@ -135,7 +165,6 @@
         const ctx = document.getElementById('habitChart').getContext('2d');
         if (myChart) myChart.destroy();
 
-        // 直近7日間の日付ラベルを作成
         const labels = [];
         for (let i = 6; i >= 0; i--) {
             const d = new Date();
@@ -144,13 +173,11 @@
         }
 
         const datasets = habits.map((habit, index) => {
-            // 日付ごとの回数をカウント
             const dataMap = {};
             habit.logs.forEach(log => {
                 const d = typeof log === 'object' ? log.date : log.split(' ')[0];
                 dataMap[d] = (dataMap[d] || 0) + 1;
             });
-
             const data = labels.map(label => dataMap[label] || 0);
             const color = colorPalette[index % colorPalette.length];
 
@@ -160,8 +187,8 @@
                 borderColor: color,
                 backgroundColor: color,
                 tension: 0.3,
-                fill: false,
-                borderWidth: 3
+                borderWidth: 2,
+                pointRadius: 3
             };
         });
 
@@ -170,7 +197,13 @@
             data: { labels: labels, datasets: datasets },
             options: {
                 responsive: true,
-                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+                maintainAspectRatio: false, // グラフを大きく表示
+                plugins: { 
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { boxWidth: 8, font: { size: 9 } } 
+                    } 
+                },
                 scales: {
                     y: { beginAtZero: true, ticks: { stepSize: 1 } },
                     x: { grid: { display: false } }
