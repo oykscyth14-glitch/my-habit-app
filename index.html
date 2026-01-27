@@ -90,7 +90,7 @@
         }
         .chart-controls button.active { background: #455a64; color: white; }
 
-        canvas { max-height: 250px; }
+        canvas { min-height: 280px; }
     </style>
 </head>
 <body>
@@ -201,8 +201,8 @@
         return logs.filter(log => new Date(log).toDateString() === today).length;
     }
 
-    // --- グラフ関連 ---
-    function initChart() {
+   // --- グラフ関連 ---
+   function initChart() {
         const ctx = document.getElementById('habitChart').getContext('2d');
         habitChart = new Chart(ctx, {
             type: 'line',
@@ -210,8 +210,28 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                plugins: { 
+                    legend: { 
+                        display: true, // 凡例を表示
+                        position: 'bottom', // 下側に配置
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15,
+                            font: { size: 10 }
+                        }
+                    } 
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true, 
+                        ticks: { stepSize: 1, color: '#666' },
+                        grid: { color: '#f0f0f0' }
+                    },
+                    x: {
+                        ticks: { color: '#666' },
+                        grid: { display: false }
+                    }
+                }
             }
         });
         updateChart('week');
