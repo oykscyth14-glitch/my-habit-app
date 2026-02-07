@@ -76,6 +76,19 @@
 
 <script>
     let habitChart;
+    // 特殊文字を無害な文字列に変換する関数
+    function escapeHTML(str) {
+        if (!str) return "";
+        return str.replace(/[&<>"']/g, function(m) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[m];
+        });
+    }
     let currentRange = 'week';
 
     // 🎨 10個までは絶対に被らないデザイナーズパレット
@@ -181,7 +194,7 @@
                 activeHtml += `
                     <li class="habit-card">
                         <div class="habit-info" onclick="logHabit(${i}, event)">
-                            <span class="habit-name">${h.name}</span>
+                            <span class="habit-name">${escapeHTML(h.name)}</span>
                             <span class="habit-count">今日: ${todayCount}回</span>
                         </div>
                         <div class="card-actions">
@@ -195,7 +208,7 @@
                 archiveCount++;
                 archiveHtml += `
                     <li class="archive-item">
-                        <span class="archive-name">${h.name}</span>
+                        <span class="archive-name">${escapeHTML(h.name)}</span>
                         <button class="btn-restore" onclick="toggleArchive(${i}, event)">表示する</button>
                     </li>
                 `;
