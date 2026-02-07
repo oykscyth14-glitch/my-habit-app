@@ -3,79 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Tracker Pro</title>
+    <title>Habit Tracker Pro - Multi Color</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* 前回のスタイルをすべて継承 */
         :root {
             --bg-gradient: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
             --card-bg: rgba(255, 255, 255, 0.15);
             --accent-green: #81c784;
             --text-white: #ffffff;
         }
-
-        body {
-            background: var(--bg-gradient); color: var(--text-white);
-            font-family: sans-serif; min-height: 100vh; margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); background: rgba(255,255,255,0.3); }
-            100% { transform: scale(1); }
-        }
+        body { background: var(--bg-gradient); color: var(--text-white); font-family: sans-serif; min-height: 100vh; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); background: rgba(255,255,255,0.3); } 100% { transform: scale(1); } }
         .pop-animation { animation: pop 0.3s ease-out; }
-
         h1 { font-family: 'Montserrat', sans-serif; margin-bottom: 20px; }
-
         .input-group { margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; gap: 10px; }
         input { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 16px; }
         .add-btn { background: var(--accent-green); border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
-
-        #habitList {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
-            width: 100%; max-width: 400px; padding: 0; list-style: none;
-        }
-
-        .habit-card {
-            background: var(--card-bg); backdrop-filter: blur(8px); border-radius: 12px;
-            padding: 12px; border: 1px solid rgba(255,255,255,0.1);
-            text-align: center; transition: all 0.2s;
-        }
-
+        #habitList { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; max-width: 400px; padding: 0; list-style: none; }
+        .habit-card { background: var(--card-bg); backdrop-filter: blur(8px); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: all 0.2s; }
         .habit-info { cursor: pointer; margin-bottom: 8px; }
         .habit-name { display: block; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .habit-count { font-size: 0.75rem; opacity: 0.8; }
-
         .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 5px; }
-        .action-btn {
-            background: rgba(255,255,255,0.1); border: none; color: white;
-            font-size: 0.6rem; padding: 4px 2px; border-radius: 4px; cursor: pointer;
-        }
+        .action-btn { background: rgba(255,255,255,0.1); border: none; color: white; font-size: 0.6rem; padding: 4px 2px; border-radius: 4px; cursor: pointer; }
         .btn-hide { background: rgba(0,0,0,0.2); }
-
-        .chart-container {
-            background: white; border-radius: 16px; padding: 15px; margin-top: 25px;
-            width: 100%; max-width: 400px; box-sizing: border-box; height: auto; min-height: 320px;
-        }
+        .chart-container { background: white; border-radius: 16px; padding: 15px; margin-top: 25px; width: 100%; max-width: 400px; box-sizing: border-box; height: auto; min-height: 320px; }
         .chart-controls { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
-        .chart-controls button {
-            background: #eee; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 0.75rem; color: #333;
-        }
+        .chart-controls button { background: #eee; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 0.75rem; color: #333; }
         .chart-controls button.active { background: #455a64; color: white; }
-
-        /* 非表示エリアのデザイン */
         .archive-section { margin-top: 40px; width: 100%; max-width: 400px; opacity: 0.8; }
         .archive-title { font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; margin-bottom: 10px; }
         .archive-list { list-style: none; padding: 0; }
-        .archive-item { 
-            background: rgba(0,0,0,0.2); margin-bottom: 5px; padding: 8px 12px; 
-            border-radius: 6px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .archive-item { background: rgba(0,0,0,0.2); margin-bottom: 5px; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
         .archive-name { font-size: 0.85rem; }
         .btn-restore { background: var(--accent-green); border: none; color: white; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
-
         .backup-area { margin: 30px 0; display: flex; gap: 10px; opacity: 0.6; }
         .backup-btn { background: transparent; border: 1px solid white; color: white; font-size: 0.7rem; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
@@ -114,7 +77,20 @@
 <script>
     let habitChart;
     let currentRange = 'week';
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#81C784', '#F48FB1', '#80DEEA', '#D4E157'];
+
+    // 🎨 10個までは絶対に被らないデザイナーズパレット
+    const colorPalette = [
+        '#FF6384', // 1: ピンク
+        '#36A2EB', // 2: ブルー
+        '#FFCE56', // 3: イエロー
+        '#4BC0C0', // 4: ターコイズ
+        '#9966FF', // 5: パープル
+        '#FF9F40', // 6: オレンジ
+        '#C9CBCF', // 7: グレー
+        '#4D5360', // 8: ダークグレー
+        '#81C784', // 9: グリーン
+        '#F06292'  // 10: ライトピンク
+    ];
 
     window.onload = () => {
         renderHabits();
@@ -139,9 +115,13 @@
         const input = document.getElementById('habitInput');
         if (!input.value.trim()) return;
         const habits = getHabits();
+        
+        // 色を割り当て（既存の数に基づいてパレットから選択）
+        const nextColor = colorPalette[habits.length % colorPalette.length];
+        
         habits.push({ 
             name: input.value, 
-            color: colors[habits.length % colors.length], 
+            color: nextColor, 
             logs: [],
             archived: false 
         });
@@ -149,15 +129,14 @@
         saveAndRefresh(habits);
     }
 
+    // 記録、取消、非表示、削除の関数（前回のロジックを継承）
     function logHabit(index, event) {
         const habits = getHabits();
         habits[index].logs.push(new Date().toISOString());
-        
         const card = event.currentTarget.closest('.habit-card');
         card.classList.remove('pop-animation');
         void card.offsetWidth; 
         card.classList.add('pop-animation');
-
         saveAndRefresh(habits);
     }
 
@@ -170,7 +149,6 @@
         }
     }
 
-    // 非表示(アーカイブ)切り替え
     function toggleArchive(index, e) {
         e.stopPropagation();
         const habits = getHabits();
@@ -180,7 +158,7 @@
 
     function deleteHabit(index, e) {
         e.stopPropagation();
-        if (confirm("この習慣を完全に削除しますか？\n(履歴もすべて消去されます)")) {
+        if (confirm("この習慣を完全に削除しますか？")) {
             const habits = getHabits();
             habits.splice(index, 1);
             saveAndRefresh(habits);
@@ -193,7 +171,6 @@
         const habitListEl = document.getElementById('habitList');
         const archiveListEl = document.getElementById('archiveList');
         const archiveSection = document.getElementById('archiveSection');
-        
         let activeHtml = "";
         let archiveHtml = "";
         let archiveCount = 0;
@@ -224,7 +201,6 @@
                 `;
             }
         });
-
         habitListEl.innerHTML = activeHtml;
         archiveListEl.innerHTML = archiveHtml;
         archiveSection.style.display = archiveCount > 0 ? 'block' : 'none';
@@ -268,7 +244,7 @@
         }
 
         habitChart.data.labels = labels;
-        habitChart.data.datasets = habits.map(h => {
+        habitChart.data.datasets = habits.map((h, index) => {
             const data = new Array(count).fill(0);
             h.logs.forEach(log => {
                 const lD = new Date(log);
@@ -283,7 +259,13 @@
                     }
                 }
             });
-            return { label: h.name, data: data, backgroundColor: h.color, borderRadius: 4 };
+            // グラフ描画時に色が重複しないようパレットから確実に割り当て
+            return { 
+                label: h.name, 
+                data: data, 
+                backgroundColor: h.color || colorPalette[index % colorPalette.length], 
+                borderRadius: 4 
+            };
         });
         habitChart.update();
     }
@@ -301,7 +283,7 @@
     function importData(e) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-            if(confirm("バックアップから復元しますか？現在のデータは上書きされます。")){
+            if(confirm("バックアップから復元しますか？")){
                 localStorage.setItem('habitsV2', ev.target.result);
                 location.reload();
             }
