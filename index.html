@@ -11,14 +11,13 @@
             --bg-gradient: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
             --card-bg: rgba(255, 255, 255, 0.15);
             --accent-green: #81c784;
-            --accent-orange: #ff8a65;
             --text-white: #ffffff;
         }
 
         body {
             background: var(--bg-gradient);
             color: var(--text-white);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: sans-serif;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
@@ -27,176 +26,96 @@
             align-items: center;
         }
 
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
+        h1 { font-family: 'Montserrat', sans-serif; margin-bottom: 20px; }
 
-        /* 入力エリア */
         .input-group {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             display: flex;
             gap: 10px;
         }
 
         input {
             flex: 1;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 8px;
             border: none;
-            outline: none;
-            font-size: 1rem;
+            font-size: 16px; /* モバイルでのズーム防止 */
         }
 
         .add-btn {
             background: var(--accent-green);
             border: none;
-            padding: 0 25px;
-            border-radius: 12px;
+            padding: 0 20px;
+            border-radius: 8px;
             cursor: pointer;
             color: white;
             font-weight: bold;
-            transition: transform 0.1s;
         }
 
-        .add-btn:active { transform: scale(0.95); }
-
-        /* 習慣リスト（グリッド） */
         #habitList {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             padding: 0;
             list-style: none;
-            margin-bottom: 30px;
         }
 
         .habit-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 15px;
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 12px;
             border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .habit-card:hover { background: rgba(255, 255, 255, 0.2); }
-
-        .habit-info {
-            width: 100%;
             text-align: center;
-            cursor: pointer;
-            margin-bottom: 12px;
         }
 
-        .habit-name {
-            display: block;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
+        .habit-info { cursor: pointer; margin-bottom: 8px; }
+        .habit-name { display: block; font-weight: bold; }
+        .habit-count { font-size: 0.75rem; opacity: 0.8; }
 
-        .habit-count {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            background: rgba(0,0,0,0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-
-        /* カード内アクションボタン */
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-        }
-
+        .card-actions { display: flex; gap: 5px; justify-content: center; }
         .action-btn {
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: none;
             color: white;
-            font-size: 0.7rem;
-            padding: 5px 10px;
-            border-radius: 6px;
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .action-btn:hover { background: rgba(255,255,255,0.2); }
-        .btn-delete { color: var(--accent-orange); }
-
-        /* グラフエリア */
+        /* グラフはみ出し対策 */
         .chart-container {
             background: white;
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 15px;
-            width: 95%;
-            max-width: 500px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            margin-bottom: 40px;
-            box-sizing: border-box;
-
-            height: 350px
-        }
-
-        .chart-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .chart-controls button {
-            background: #f0f0f0;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: bold;
-        }
-
-        .chart-controls button.active {
-            background: #455a64;
-            color: white;
+            margin-top: 25px;
+            width: 100%;
+            max-width: 400px; /* リストの幅に合わせる */
+            box-sizing: border-box; /* パディングを幅に含める */
+            height: 300px; /* 高さを固定 */
+            position: relative;
         }
 
         canvas {
-        width: 100% !important;
-        height: 100% !important;
+            width: 100% !important;
+            height: 100% !important;
         }
 
-        /* バックアップ・復元 */
-        .backup-area {
-            display: flex;
-            gap: 15px;
-            opacity: 0.7;
-            margin-bottom: 50px;
+        .chart-controls { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
+        .chart-controls button {
+            background: #eee; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 0.75rem;
         }
+        .chart-controls button.active { background: #455a64; color: white; }
 
+        .backup-area { margin: 30px 0; display: flex; gap: 10px; opacity: 0.6; }
         .backup-btn {
-            background: transparent;
-            border: 1px solid white;
-            color: white;
-            font-size: 0.75rem;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: transparent; border: 1px solid white; color: white; font-size: 0.7rem; padding: 5px 10px; border-radius: 5px; cursor: pointer;
         }
-
-        .backup-btn:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -204,24 +123,24 @@
     <h1>Habit tracker</h1>
 
     <div class="input-group">
-        <input type="text" id="habitInput" placeholder="新しい習慣を入力...">
-        <button class="add-btn" onclick="addHabit()">追加</button>
+        <input type="text" id="habitInput" placeholder="新しい習慣を追加...">
+        <button class="add-btn" id="addBtn">＋</button>
     </div>
 
     <ul id="habitList"></ul>
 
     <div class="chart-container">
         <div class="chart-controls">
-            <button id="btn-week" onclick="changeRange('week')" class="active">週</button>
-            <button id="btn-month" onclick="changeRange('month')">月</button>
-            <button id="btn-year" onclick="changeRange('year')">年</button>
+            <button id="btn-week" class="range-btn active" data-range="week">週</button>
+            <button id="btn-month" class="range-btn" data-range="month">月</button>
+            <button id="btn-year" class="range-btn" data-range="year">年</button>
         </div>
         <canvas id="habitChart"></canvas>
     </div>
 
     <div class="backup-area">
-        <button class="backup-btn" onclick="exportData()">データを保存 (JSON)</button>
-        <button class="backup-btn" onclick="document.getElementById('importFile').click()">復元 (読込)</button>
+        <button class="backup-btn" onclick="exportData()">データを保存</button>
+        <button class="backup-btn" onclick="document.getElementById('importFile').click()">復元</button>
         <input type="file" id="importFile" style="display:none" onchange="importData(event)">
     </div>
 
@@ -230,29 +149,40 @@
     let currentRange = 'week';
     const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#81C784', '#F48FB1', '#80DEEA', '#D4E157'];
 
-    // 初期化
+    // 初期化処理
     window.onload = () => {
         renderHabits();
         initChart();
+        
+        // イベントリスナーを確実にセット
+        document.getElementById('addBtn').addEventListener('click', addHabit);
+        document.querySelectorAll('.range-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => changeRange(e.target.dataset.range));
+        });
     };
 
-    // データの取得と保存
-    function getHabits() { return JSON.parse(localStorage.getItem('habitsV2')) || []; }
+    function getHabits() {
+        try {
+            return JSON.parse(localStorage.getItem('habitsV2')) || [];
+        } catch(e) {
+            return [];
+        }
+    }
+
     function saveAndRefresh(habits) {
         localStorage.setItem('habitsV2', JSON.stringify(habits));
         renderHabits();
         updateChart(currentRange);
     }
 
-    // 習慣の追加
     function addHabit() {
         const input = document.getElementById('habitInput');
-        const text = input.value.trim();
-        if (!text) return;
-        
+        const val = input.value.trim();
+        if (!val) return;
+
         const habits = getHabits();
         habits.push({
-            name: text,
+            name: val,
             color: colors[habits.length % colors.length],
             logs: []
         });
@@ -260,59 +190,49 @@
         saveAndRefresh(habits);
     }
 
-    // 記録（カウントアップ）
     function logHabit(index) {
         const habits = getHabits();
         habits[index].logs.push(new Date().toISOString());
         saveAndRefresh(habits);
     }
 
-    // 一つ戻す（最新の記録を削除）
     function undoHabit(index, e) {
-        e.stopPropagation(); // 親要素のclickイベント（記録）を阻止
+        e.stopPropagation();
         const habits = getHabits();
-        if (habits[index].logs.length === 0) return;
-        
-        if (confirm(`「${habits[index].name}」の最新の記録を取り消しますか？`)) {
+        if (habits[index].logs.length > 0 && confirm("最新の記録を取り消しますか？")) {
             habits[index].logs.pop();
             saveAndRefresh(habits);
         }
     }
 
-    // 習慣そのものを削除
     function deleteHabit(index, e) {
-        e.stopPropagation(); // 親要素のclickイベント（記録）を阻止
-        const habits = getHabits();
-        if (confirm(`「${habits[index].name}」を完全に削除してもよろしいですか？\n※これまでの記録もすべて消去されます。`)) {
+        e.stopPropagation();
+        if (confirm("この習慣を削除しますか？")) {
+            const habits = getHabits();
             habits.splice(index, 1);
             saveAndRefresh(habits);
         }
     }
 
-    // カードの描画
     function renderHabits() {
         const habits = getHabits();
-        const habitList = document.getElementById('habitList');
-        const todayStr = new Date().toDateString();
-
-        habitList.innerHTML = habits.map((h, i) => {
-            const todayCount = h.logs.filter(log => new Date(log).toDateString() === todayStr).length;
-            return `
-                <li class="habit-card">
-                    <div class="habit-info" onclick="logHabit(${i})">
-                        <span class="habit-name">${h.name}</span>
-                        <span class="habit-count">今日: ${todayCount}回</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="action-btn" onclick="undoHabit(${i}, event)">戻す</button>
-                        <button class="action-btn btn-delete" onclick="deleteHabit(${i}, event)">削除</button>
-                    </div>
-                </li>
-            `;
-        }).join('');
+        const today = new Date().toDateString();
+        const listEl = document.getElementById('habitList');
+        
+        listEl.innerHTML = habits.map((h, i) => `
+            <li class="habit-card">
+                <div class="habit-info" onclick="logHabit(${i})">
+                    <span class="habit-name">${h.name}</span>
+                    <span class="habit-count">今日: ${h.logs.filter(l => new Date(l).toDateString() === today).length}回</span>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn" onclick="undoHabit(${i}, event)">戻す</button>
+                    <button class="action-btn" onclick="deleteHabit(${i}, event)" style="color:#ff8a65">削除</button>
+                </div>
+            </li>
+        `).join('');
     }
 
-    // グラフの初期化
     function initChart() {
         const ctx = document.getElementById('habitChart').getContext('2d');
         habitChart = new Chart(ctx, {
@@ -321,111 +241,77 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                layout: {
-                padding: { left: 5, right: 15, top: 10, bottom: 0 }
-                },
                 plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: { boxWidth: 10, font: { size: 11 } ,padding: 15}
-                    }
+                    legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
                 },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 }, color: '#666' }, grid: { color: '#eee' } },
-                    x: { ticks: {font: { size: 10 }, color: '#666' }, grid: { display: false } }
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
                 }
             }
         });
         updateChart('week');
     }
 
-    // 表示期間の切り替え
     function changeRange(range) {
         currentRange = range;
-        document.querySelectorAll('.chart-controls button').forEach(b => {
-            b.classList.toggle('active', b.id === `btn-${range}`);
+        document.querySelectorAll('.range-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.range === range);
         });
         updateChart(range);
     }
 
-    // グラフの更新
     function updateChart(range) {
         const habits = getHabits();
         const labels = [];
-        let count = range === 'week' ? 7 : (range === 'month' ? 30 : 12);
+        const count = range === 'week' ? 7 : (range === 'month' ? 30 : 12);
         
-        const now = new Date();
         for(let i = count - 1; i >= 0; i--) {
             let d = new Date();
-            if(range === 'year') {
-                d.setMonth(now.getMonth() - i);
-                labels.push(`${d.getMonth() + 1}月`);
-            } else {
-                d.setDate(now.getDate() - i);
-                labels.push(`${d.getMonth() + 1}/${d.getDate()}`);
-            }
+            if(range === 'year') d.setMonth(d.getMonth() - i); 
+            else d.setDate(d.getDate() - i);
+            labels.push(range === 'year' ? `${d.getMonth()+1}月` : `${d.getMonth()+1}/${d.getDate()}`);
         }
 
         habitChart.data.labels = labels;
         habitChart.data.datasets = habits.map(h => {
-            const dataCounts = new Array(count).fill(0);
+            const data = new Array(count).fill(0);
             h.logs.forEach(log => {
-                const logDate = new Date(log);
-                for(let i = 0; i < count; i++) {
-                    let targetDate = new Date();
+                const lD = new Date(log);
+                for(let i=0; i<count; i++){
+                    let t = new Date();
                     if(range === 'year') {
-                        targetDate.setMonth(now.getMonth() - (count - 1 - i));
-                        if(logDate.getFullYear() === targetDate.getFullYear() && 
-                           logDate.getMonth() === targetDate.getMonth()) dataCounts[i]++;
+                        t.setMonth(t.getMonth()-(count-1-i));
+                        if(lD.getFullYear()===t.getFullYear() && lD.getMonth()===t.getMonth()) data[i]++;
                     } else {
-                        targetDate.setDate(now.getDate() - (count - 1 - i));
-                        if(logDate.toDateString() === targetDate.toDateString()) dataCounts[i]++;
+                        t.setDate(t.getDate()-(count-1-i));
+                        if(lD.toDateString()===t.toDateString()) data[i]++;
                     }
                 }
             });
-            return {
-                label: h.name,
-                data: dataCounts,
-                borderColor: h.color,
-                backgroundColor: h.color + '33', // 20% opacity
-                tension: 0.3,
-                fill: false
-            };
+            return { label: h.name, data: data, borderColor: h.color, tension: 0.3, pointRadius: 2 };
         });
         habitChart.update();
     }
 
-    // エクスポート（JSON保存）
     function exportData() {
         const data = localStorage.getItem('habitsV2');
-        if (!data || data === '[]') return alert("保存するデータがありません。");
+        if(!data) return;
         const blob = new Blob([data], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = `habit_tracker_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.href = URL.createObjectURL(blob);
+        a.download = `habits_backup.json`;
         a.click();
-        URL.revokeObjectURL(url);
     }
 
-    // インポート（JSON読込）
     function importData(e) {
-        const file = e.target.files[0];
-        if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
-            try {
-                const json = JSON.parse(ev.target.result);
-                if (confirm("データを復元しますか？現在のデータは上書きされます。")) {
-                    localStorage.setItem('habitsV2', JSON.stringify(json));
-                    location.reload();
-                }
-            } catch (err) {
-                alert("ファイルの形式が正しくありません。");
+            if(confirm("データを復元しますか？")){
+                localStorage.setItem('habitsV2', ev.target.result);
+                location.reload();
             }
         };
-        reader.readAsText(file);
+        reader.readAsText(e.target.files[0]);
     }
 </script>
 </body>
