@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Tracker Pro</title>
+    <title>Habit Tracker Ultra</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -15,104 +15,59 @@
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-white);
-            font-family: sans-serif;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: var(--bg-gradient); color: var(--text-white);
+            font-family: sans-serif; min-height: 100vh; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
+
+        /* アニメーション定義 */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); background: rgba(255,255,255,0.3); }
+            100% { transform: scale(1); }
+        }
+        .pop-animation { animation: pop 0.3s ease-out; }
 
         h1 { font-family: 'Montserrat', sans-serif; margin-bottom: 20px; }
 
-        .input-group {
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            gap: 10px;
-        }
-
-        input {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-        }
-
-        .add-btn {
-            background: var(--accent-green);
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-        }
+        .input-group { margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; gap: 10px; }
+        input { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 16px; }
+        .add-btn { background: var(--accent-green); border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
 
         #habitList {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            width: 100%;
-            max-width: 400px;
-            padding: 0;
-            list-style: none;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            width: 100%; max-width: 400px; padding: 0; list-style: none;
         }
 
         .habit-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            border-radius: 12px;
-            padding: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
+            background: var(--card-bg); backdrop-filter: blur(8px); border-radius: 12px;
+            padding: 12px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; transition: all 0.2s;
         }
 
         .habit-info { cursor: pointer; margin-bottom: 8px; }
-        .habit-name { display: block; font-weight: bold; }
+        .habit-name { display: block; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .habit-count { font-size: 0.75rem; opacity: 0.8; }
 
-        .card-actions { display: flex; gap: 5px; justify-content: center; }
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 5px; }
         .action-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            font-size: 0.65rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            font-size: 0.6rem; padding: 4px 2px; border-radius: 4px; cursor: pointer;
         }
+        .btn-archive { background: rgba(0,0,0,0.2); }
 
-        /* グラフエリアの修正 */
         .chart-container {
-            background: white;
-            border-radius: 16px;
-            padding: 15px;
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-            /* 高さを固定せず、中身(Canvas)に合わせる */
-            height: auto; 
-            min-height: 300px;
-            margin-bottom: 30px;
+            background: white; border-radius: 16px; padding: 15px; margin-top: 25px;
+            width: 100%; max-width: 400px; box-sizing: border-box; height: auto; min-height: 320px;
         }
-
         .chart-controls { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
         .chart-controls button {
             background: #eee; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 0.75rem; color: #333;
         }
         .chart-controls button.active { background: #455a64; color: white; }
 
-        .backup-area { margin-bottom: 50px; display: flex; gap: 10px; opacity: 0.6; }
-        .backup-btn {
-            background: transparent; border: 1px solid white; color: white; font-size: 0.7rem; padding: 5px 10px; border-radius: 5px; cursor: pointer;
-        }
+        .backup-area { margin: 30px 0; display: flex; gap: 10px; opacity: 0.6; }
+        .backup-btn { background: transparent; border: 1px solid white; color: white; font-size: 0.7rem; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -156,8 +111,7 @@
     };
 
     function getHabits() {
-        try { return JSON.parse(localStorage.getItem('habitsV2')) || []; } 
-        catch(e) { return []; }
+        return JSON.parse(localStorage.getItem('habitsV2')) || [];
     }
 
     function saveAndRefresh(habits) {
@@ -168,17 +122,28 @@
 
     function addHabit() {
         const input = document.getElementById('habitInput');
-        const val = input.value.trim();
-        if (!val) return;
+        if (!input.value.trim()) return;
         const habits = getHabits();
-        habits.push({ name: val, color: colors[habits.length % colors.length], logs: [] });
+        habits.push({ 
+            name: input.value, 
+            color: colors[habits.length % colors.length], 
+            logs: [],
+            archived: false 
+        });
         input.value = "";
         saveAndRefresh(habits);
     }
 
-    function logHabit(index) {
+    function logHabit(index, event) {
         const habits = getHabits();
         habits[index].logs.push(new Date().toISOString());
+        
+        // アニメーション適用
+        const card = event.currentTarget.closest('.habit-card');
+        card.classList.remove('pop-animation');
+        void card.offsetWidth; // リフロー強制
+        card.classList.add('pop-animation');
+
         saveAndRefresh(habits);
     }
 
@@ -191,9 +156,16 @@
         }
     }
 
+    function toggleArchive(index, e) {
+        e.stopPropagation();
+        const habits = getHabits();
+        habits[index].archived = !habits[index].archived;
+        saveAndRefresh(habits);
+    }
+
     function deleteHabit(index, e) {
         e.stopPropagation();
-        if (confirm("この習慣を削除しますか？")) {
+        if (confirm("この習慣を完全に削除しますか？")) {
             const habits = getHabits();
             habits.splice(index, 1);
             saveAndRefresh(habits);
@@ -203,15 +175,17 @@
     function renderHabits() {
         const habits = getHabits();
         const today = new Date().toDateString();
-        document.getElementById('habitList').innerHTML = habits.map((h, i) => `
+        // 非アーカイブのみ表示
+        document.getElementById('habitList').innerHTML = habits.map((h, i) => h.archived ? '' : `
             <li class="habit-card">
-                <div class="habit-info" onclick="logHabit(${i})">
+                <div class="habit-info" onclick="logHabit(${i}, event)">
                     <span class="habit-name">${h.name}</span>
                     <span class="habit-count">今日: ${h.logs.filter(l => new Date(l).toDateString() === today).length}回</span>
                 </div>
                 <div class="card-actions">
                     <button class="action-btn" onclick="undoHabit(${i}, event)">戻す</button>
-                    <button class="action-btn" onclick="deleteHabit(${i}, event)" style="color:#ff8a65">削除</button>
+                    <button class="action-btn btn-archive" onclick="toggleArchive(${i}, event)">完了</button>
+                    <button class="action-btn" onclick="deleteHabit(${i}, event)" style="grid-column: span 2; color:#ff8a65">削除</button>
                 </div>
             </li>
         `).join('');
@@ -220,26 +194,18 @@
     function initChart() {
         const ctx = document.getElementById('habitChart').getContext('2d');
         habitChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar', // 棒グラフに変更
             data: { labels: [], datasets: [] },
             options: {
                 responsive: true,
-                maintainAspectRatio: true, // 比率を維持
-                aspectRatio: 1.2,          // やや正方形に近くして凡例スペースを確保
+                maintainAspectRatio: true,
+                aspectRatio: 1.2,
                 plugins: {
-                    legend: { 
-                        display: true, 
-                        position: 'bottom',
-                        labels: { 
-                            boxWidth: 12, 
-                            font: { size: 10 },
-                            padding: 10 // 凡例同士の間隔
-                        } 
-                    }
+                    legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
                 },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1, color: '#666' } },
-                    x: { ticks: { color: '#666' } }
+                    x: { stacked: true }, // 積み上げ設定
+                    y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } }
                 }
             }
         });
@@ -253,14 +219,17 @@
     }
 
     function updateChart(range) {
-        const habits = getHabits();
+        const habits = getHabits().filter(h => !h.archived); // アーカイブ以外
         const labels = [];
         const count = range === 'week' ? 7 : (range === 'month' ? 30 : 12);
+        const now = new Date();
+
         for(let i = count - 1; i >= 0; i--) {
             let d = new Date();
-            if(range === 'year') d.setMonth(d.getMonth() - i); else d.setDate(d.getDate() - i);
+            if(range === 'year') d.setMonth(now.getMonth() - i); else d.setDate(now.getDate() - i);
             labels.push(range === 'year' ? `${d.getMonth()+1}月` : `${d.getMonth()+1}/${d.getDate()}`);
         }
+
         habitChart.data.labels = labels;
         habitChart.data.datasets = habits.map(h => {
             const data = new Array(count).fill(0);
@@ -269,22 +238,21 @@
                 for(let i=0; i<count; i++){
                     let t = new Date();
                     if(range === 'year') {
-                        t.setMonth(t.getMonth()-(count-1-i));
+                        t.setMonth(now.getMonth()-(count-1-i));
                         if(lD.getFullYear()===t.getFullYear() && lD.getMonth()===t.getMonth()) data[i]++;
                     } else {
-                        t.setDate(t.getDate()-(count-1-i));
+                        t.setDate(now.getDate()-(count-1-i));
                         if(lD.toDateString()===t.toDateString()) data[i]++;
                     }
                 }
             });
-            return { label: h.name, data: data, borderColor: h.color, tension: 0.3, pointRadius: 3 };
+            return { label: h.name, data: data, backgroundColor: h.color, borderRadius: 4 };
         });
         habitChart.update();
     }
 
     function exportData() {
         const data = localStorage.getItem('habitsV2');
-        if(!data) return;
         const blob = new Blob([data], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
